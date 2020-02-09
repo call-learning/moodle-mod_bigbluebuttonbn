@@ -453,6 +453,7 @@ function bigbluebuttonbn_reset_userdata($data) {
         unset($items['tags']);
         $status[] = bigbluebuttonbn_reset_getstatus('tags');
     }
+    // TODO : seems to be duplicated code unless we just want to force reset tags
     foreach ($items as $item => $default) {
         // Remove instances or elements linked to this course, others than recordings or tags.
         if (!empty($data->{"reset_bigbluebuttonbn_{$item}"})) {
