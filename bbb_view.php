@@ -129,7 +129,7 @@ switch (strtolower($action)) {
         // Moodle event logger: Create an event for meeting left.
         bigbluebuttonbn_event_log(\mod_bigbluebuttonbn\event\events::$events['meeting_left'], $bigbluebuttonbn);
         // Update the cache.
-        $meetinginfo = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], BIGBLUEBUTTONBN_UPDATE_CACHE);
+        $meetinginfo = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], bbb_constants::BIGBLUEBUTTONBN_UPDATE_CACHE);
         // Check the origin page.
         $select = "userid = ? AND log = ?";
         $params = array(
@@ -140,7 +140,7 @@ switch (strtolower($action)) {
         $lastaccess = end($accesses);
         $lastaccess = json_decode($lastaccess->meta);
         // If the user acceded from Timeline it should be redirected to the Dashboard.
-        if (isset($lastaccess->origin) && $lastaccess->origin == BIGBLUEBUTTON_ORIGIN_TIMELINE) {
+        if (isset($lastaccess->origin) && $lastaccess->origin == bbb_constants::BIGBLUEBUTTON_ORIGIN_TIMELINE) {
             redirect($CFG->wwwroot . '/my/');
         }
         // Close the tab or window where BBB was opened.
@@ -152,11 +152,11 @@ switch (strtolower($action)) {
             break;
         }
         // Check the origin page.
-        $origin = BIGBLUEBUTTON_ORIGIN_BASE;
+        $origin = bbb_constants::BIGBLUEBUTTON_ORIGIN_BASE;
         if ($timeline) {
-            $origin = BIGBLUEBUTTON_ORIGIN_TIMELINE;
+            $origin = bbb_constants::BIGBLUEBUTTON_ORIGIN_TIMELINE;
         } else if ($index) {
-            $origin = BIGBLUEBUTTON_ORIGIN_INDEX;
+            $origin = bbb_constants::BIGBLUEBUTTON_ORIGIN_INDEX;
         }
         // See if the session is in progress.
         if (bigbluebuttonbn_is_meeting_running($bbbsession['meetingid'])) {
@@ -410,7 +410,7 @@ function bigbluebuttonbn_bbb_view_create_meeting_metadata(&$bbbsession) {
  */
 function bigbluebuttonbn_bbb_view_join_meeting($bbbsession, $bigbluebuttonbn, $origin = 0) {
     // Update the cache.
-    $meetinginfo = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], BIGBLUEBUTTONBN_UPDATE_CACHE);
+    $meetinginfo = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], bbb_constants::BIGBLUEBUTTONBN_UPDATE_CACHE);
     if ($bbbsession['userlimit'] > 0 && intval($meetinginfo['participantCount']) >= $bbbsession['userlimit']) {
         // No more users allowed to join.
         header('Location: '.$bbbsession['logoutURL']);

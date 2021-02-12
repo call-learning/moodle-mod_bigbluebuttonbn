@@ -252,7 +252,7 @@ class bigbluebutton {
             $bbbsession['clienttype'] = $bbbsession['bigbluebuttonbn']->clienttype;
         }
         if (!config::clienttype_enabled()) {
-            $bbbsession['clienttype'] = BIGBLUEBUTTON_CLIENTTYPE_FLASH;
+            $bbbsession['clienttype'] = bbb_constants::BIGBLUEBUTTON_CLIENTTYPE_FLASH;
         }
     }
 

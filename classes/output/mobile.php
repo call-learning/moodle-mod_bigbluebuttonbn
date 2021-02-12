@@ -184,7 +184,7 @@ class mobile {
 
         // It is part of 'bigbluebuttonbn_bbb_view_join_meeting' in bbb_view.
         // Update the cache.
-        $meetinginfo = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], BIGBLUEBUTTONBN_UPDATE_CACHE);
+        $meetinginfo = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], bbb_constants::BIGBLUEBUTTONBN_UPDATE_CACHE);
         if ($bbbsession['userlimit'] > 0 && intval($meetinginfo['participantCount']) >= $bbbsession['userlimit']) {
             // No more users allowed to join.
             $message = get_string('view_error_userlimit_reached', 'bigbluebuttonbn');

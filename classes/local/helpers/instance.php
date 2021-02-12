@@ -24,6 +24,7 @@
 namespace mod_bigbluebuttonbn\local\helpers;
 
 use calendar_event;
+use mod_bigbluebuttonbn\local\bbb_constants;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -148,7 +149,7 @@ class instance {
      **/
     public static function bigbluebuttonbn_process_pre_save_common(&$bigbluebuttonbn) {
         // Make sure common settings are removed when 'recordings only'.
-        if ($bigbluebuttonbn->type == BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY) {
+        if ($bigbluebuttonbn->type == bbb_constants::BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY) {
             $bigbluebuttonbn->groupmode = 0;
             $bigbluebuttonbn->groupingid = 0;
         }
@@ -206,7 +207,7 @@ class instance {
         }
         // Add evento to the calendar as openingtime is set.
         $event = new stdClass();
-        $event->eventtype = BIGBLUEBUTTON_EVENT_MEETING_START;
+        $event->eventtype = bbb_constants::BIGBLUEBUTTON_EVENT_MEETING_START;
         $event->type = CALENDAR_EVENT_TYPE_ACTION;
         $event->name = get_string('calendarstarts', 'bigbluebuttonbn', $bigbluebuttonbn->name);
         $event->description = format_module_intro('bigbluebuttonbn', $bigbluebuttonbn, $bigbluebuttonbn->coursemodule, false);

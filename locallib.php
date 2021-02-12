@@ -32,61 +32,6 @@ defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
 
-/** @var BIGBLUEBUTTONBN_UPDATE_CACHE boolean set to true indicates that cache has to be updated */
-const BIGBLUEBUTTONBN_UPDATE_CACHE = true;
-/** @var BIGBLUEBUTTONBN_TYPE_ALL integer set to 0 defines an instance type that inclueds room and recordings */
-const BIGBLUEBUTTONBN_TYPE_ALL = 0;
-/** @var BIGBLUEBUTTONBN_TYPE_ROOM_ONLY integer set to 1 defines an instance type that inclueds only room */
-const BIGBLUEBUTTONBN_TYPE_ROOM_ONLY = 1;
-/** @var BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY integer set to 2 defines an instance type that inclueds only recordings */
-const BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY = 2;
-/** @var BIGBLUEBUTTONBN_ROLE_VIEWER string defines the bigbluebutton viewer role */
-const BIGBLUEBUTTONBN_ROLE_VIEWER = 'viewer';
-/** @var BIGBLUEBUTTONBN_ROLE_MODERATOR string defines the bigbluebutton moderator role */
-const BIGBLUEBUTTONBN_ROLE_MODERATOR = 'moderator';
-/** @var BIGBLUEBUTTON_EVENT_ACTIVITY_VIEWED string defines the bigbluebuttonbn activity_viewed event */
-const BIGBLUEBUTTON_EVENT_ACTIVITY_VIEWED = 'activity_viewed';
-/** @var BIGBLUEBUTTON_EVENT_ACTIVITY_MANAGEMENT_VIEWED string defines the bigbluebuttonbn activity_management_viewed event */
-const BIGBLUEBUTTON_EVENT_ACTIVITY_MANAGEMENT_VIEWED = 'activity_management_viewed';
-/** @var BIGBLUEBUTTON_EVENT_LIVE_SESSION string defines the bigbluebuttonbn live_session event */
-const BIGBLUEBUTTON_EVENT_LIVE_SESSION = 'live_session';
-/** @var BIGBLUEBUTTON_EVENT_MEETING_CREATED string defines the bigbluebuttonbn meeting_created event */
-const BIGBLUEBUTTON_EVENT_MEETING_CREATED = 'meeting_created';
-/** @var BIGBLUEBUTTON_EVENT_MEETING_ENDED string defines the bigbluebuttonbn meeting_ended event */
-const BIGBLUEBUTTON_EVENT_MEETING_ENDED = 'meeting_ended';
-/** @var BIGBLUEBUTTON_EVENT_MEETING_JOINED string defines the bigbluebuttonbn meeting_joined event */
-const BIGBLUEBUTTON_EVENT_MEETING_JOINED = 'meeting_joined';
-/** @var BIGBLUEBUTTON_EVENT_MEETING_LEFT string defines the bigbluebuttonbn meeting_left event */
-const BIGBLUEBUTTON_EVENT_MEETING_LEFT = 'meeting_left';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_DELETED string defines the bigbluebuttonbn recording_deleted event */
-const BIGBLUEBUTTON_EVENT_RECORDING_DELETED = 'recording_deleted';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_IMPORTED string defines the bigbluebuttonbn recording_imported event */
-const BIGBLUEBUTTON_EVENT_RECORDING_IMPORTED = 'recording_imported';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_PROTECTED string defines the bigbluebuttonbn recording_protected event */
-const BIGBLUEBUTTON_EVENT_RECORDING_PROTECTED = 'recording_protected';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_PUBLISHED string defines the bigbluebuttonbn recording_published event */
-const BIGBLUEBUTTON_EVENT_RECORDING_PUBLISHED = 'recording_published';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_UNPROTECTED string defines the bigbluebuttonbn recording_unprotected event */
-const BIGBLUEBUTTON_EVENT_RECORDING_UNPROTECTED = 'recording_unprotected';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_UNPUBLISHED string defines the bigbluebuttonbn recording_unpublished event */
-const BIGBLUEBUTTON_EVENT_RECORDING_UNPUBLISHED = 'recording_unpublished';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_EDITED string defines the bigbluebuttonbn recording_edited event */
-const BIGBLUEBUTTON_EVENT_RECORDING_EDITED = 'recording_edited';
-/** @var BIGBLUEBUTTON_EVENT_RECORDING_VIEWED string defines the bigbluebuttonbn recording_viewed event */
-const BIGBLUEBUTTON_EVENT_RECORDING_VIEWED = 'recording_viewed';
-/** @var BIGBLUEBUTTON_EVENT_MEETING_START string defines the bigbluebuttonbn meeting_start event */
-const BIGBLUEBUTTON_EVENT_MEETING_START = 'meeting_start';
-/** @var BIGBLUEBUTTON_CLIENTTYPE_FLASH integer that defines the bigbluebuttonbn default web client based on Adobe FLASH */
-const BIGBLUEBUTTON_CLIENTTYPE_FLASH = 0;
-/** @var BIGBLUEBUTTON_CLIENTTYPE_HTML5 integer that defines the bigbluebuttonbn default web client based on HTML5 */
-const BIGBLUEBUTTON_CLIENTTYPE_HTML5 = 1;
-/** @var BIGBLUEBUTTON_ORIGIN_BASE integer set to 0 defines that the user acceded the session from activity page */
-const BIGBLUEBUTTON_ORIGIN_BASE = 0;
-/** @var BIGBLUEBUTTON_ORIGIN_TIMELINE integer set to 1 defines that the user acceded the session from Timeline */
-const BIGBLUEBUTTON_ORIGIN_TIMELINE = 1;
-/** @var BIGBLUEBUTTON_ORIGIN_INDEX integer set to 2 defines that the user acceded the session from Index */
-const BIGBLUEBUTTON_ORIGIN_INDEX = 2;
-
 /**
  * Builds and retunrs a url for joining a bigbluebutton meeting.
  *
@@ -108,7 +53,7 @@ function bigbluebuttonbn_get_join_url(
     $logouturl,
     $configtoken = null,
     $userid = null,
-    $clienttype = BIGBLUEBUTTON_CLIENTTYPE_FLASH,
+    $clienttype = bbb_constants::BIGBLUEBUTTON_CLIENTTYPE_FLASH,
     $createtime = null
 ) {
     $data = ['meetingID' => $meetingid,
@@ -117,7 +62,7 @@ function bigbluebuttonbn_get_join_url(
         'logoutURL' => $logouturl,
     ];
     // Choose between Adobe Flash or HTML5 Client.
-    if ($clienttype == BIGBLUEBUTTON_CLIENTTYPE_HTML5) {
+    if ($clienttype == bbb_constants::BIGBLUEBUTTON_CLIENTTYPE_HTML5) {
         $data['joinViaHtml5'] = 'true';
     }
     if (!is_null($configtoken)) {
@@ -845,7 +790,7 @@ function bigbluebuttonbn_get_participant_list_default($context, $ownerid = null)
     $participantlist[] = array(
         'selectiontype' => 'all',
         'selectionid' => 'all',
-        'role' => BIGBLUEBUTTONBN_ROLE_VIEWER,
+        'role' => bbb_constants::BIGBLUEBUTTONBN_ROLE_VIEWER,
     );
     $defaultrules = explode(',', \mod_bigbluebuttonbn\local\config::get('participant_moderator_default'));
     foreach ($defaultrules as $defaultrule) {
@@ -854,14 +799,14 @@ function bigbluebuttonbn_get_participant_list_default($context, $ownerid = null)
                 $participantlist[] = array(
                     'selectiontype' => 'user',
                     'selectionid' => (string) $ownerid,
-                    'role' => BIGBLUEBUTTONBN_ROLE_MODERATOR);
+                    'role' => bbb_constants::BIGBLUEBUTTONBN_ROLE_MODERATOR);
             }
             continue;
         }
         $participantlist[] = array(
             'selectiontype' => 'role',
             'selectionid' => $defaultrule,
-            'role' => BIGBLUEBUTTONBN_ROLE_MODERATOR);
+            'role' => bbb_constants::BIGBLUEBUTTONBN_ROLE_MODERATOR);
     }
     return $participantlist;
 }
@@ -960,7 +905,7 @@ function bigbluebuttonbn_is_moderator_validator($participantlist, $userid, $user
  * @return boolean
  */
 function bigbluebuttonbn_is_moderator_validate_rule($participant, $userid, $userroles) {
-    if ($participant['role'] == BIGBLUEBUTTONBN_ROLE_VIEWER) {
+    if ($participant['role'] == bbb_constants::BIGBLUEBUTTONBN_ROLE_VIEWER) {
         return false;
     }
     // Validation for the 'all' rule.
@@ -2490,16 +2435,16 @@ function bigbluebuttonbn_get_count_callback_event_log($recordid, $callbacktype =
  */
 function bigbluebuttonbn_get_instance_type_profiles() {
     $instanceprofiles = array(
-        BIGBLUEBUTTONBN_TYPE_ALL => array('id' => BIGBLUEBUTTONBN_TYPE_ALL,
+        bbb_constants::BIGBLUEBUTTONBN_TYPE_ALL => array('id' => bbb_constants::BIGBLUEBUTTONBN_TYPE_ALL,
             'name' => get_string('instance_type_default', 'bigbluebuttonbn'),
             'features' => array('all')),
-        BIGBLUEBUTTONBN_TYPE_ROOM_ONLY => array('id' => BIGBLUEBUTTONBN_TYPE_ROOM_ONLY,
+        bbb_constants::BIGBLUEBUTTONBN_TYPE_ROOM_ONLY => array('id' => bbb_constants::BIGBLUEBUTTONBN_TYPE_ROOM_ONLY,
             'name' => get_string('instance_type_room_only', 'bigbluebuttonbn'),
             'features' => array('showroom', 'welcomemessage', 'voicebridge', 'waitformoderator', 'userlimit',
                 'recording', 'sendnotifications', 'preuploadpresentation', 'permissions', 'schedule', 'groups',
                 'modstandardelshdr', 'availabilityconditionsheader', 'tagshdr', 'competenciessection',
                 'clienttype', 'completionattendance', 'completionengagement', 'availabilityconditionsheader')),
-        BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY => array('id' => BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY,
+        bbb_constants::BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY => array('id' => bbb_constants::BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY,
             'name' => get_string('instance_type_recording_only', 'bigbluebuttonbn'),
             'features' => array('showrecordings', 'importrecordings', 'availabilityconditionsheader')),
     );
@@ -2516,7 +2461,7 @@ function bigbluebuttonbn_get_instance_type_profiles() {
  */
 function bigbluebuttonbn_get_enabled_features($typeprofiles, $type = null) {
     $enabledfeatures = array();
-    $features = $typeprofiles[BIGBLUEBUTTONBN_TYPE_ALL]['features'];
+    $features = $typeprofiles[bbb_constants::BIGBLUEBUTTONBN_TYPE_ALL]['features'];
     if (!is_null($type) && key_exists($type, $typeprofiles)) {
         $features = $typeprofiles[$type]['features'];
     }
@@ -2550,12 +2495,12 @@ function bigbluebuttonbn_get_enabled_features($typeprofiles, $type = null) {
 function bigbluebuttonbn_get_instance_type_profiles_create_allowed($room, $recording) {
     $profiles = bigbluebuttonbn_get_instance_type_profiles();
     if (!$room) {
-        unset($profiles[BIGBLUEBUTTONBN_TYPE_ROOM_ONLY]);
-        unset($profiles[BIGBLUEBUTTONBN_TYPE_ALL]);
+        unset($profiles[bbb_constants::BIGBLUEBUTTONBN_TYPE_ROOM_ONLY]);
+        unset($profiles[bbb_constants::BIGBLUEBUTTONBN_TYPE_ALL]);
     }
     if (!$recording) {
-        unset($profiles[BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY]);
-        unset($profiles[BIGBLUEBUTTONBN_TYPE_ALL]);
+        unset($profiles[bbb_constants::BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY]);
+        unset($profiles[bbb_constants::BIGBLUEBUTTONBN_TYPE_ALL]);
     }
     return $profiles;
 }
@@ -3017,8 +2962,8 @@ function bigbluebuttonbn_settings_clienttype(&$renderer) {
         );
         // Web Client default.
         $default = intval((int) \mod_bigbluebuttonbn\local\config::get('clienttype_default'));
-        $choices = array(BIGBLUEBUTTON_CLIENTTYPE_FLASH => get_string('mod_form_block_clienttype_flash', 'bigbluebuttonbn'),
-            BIGBLUEBUTTON_CLIENTTYPE_HTML5 => get_string('mod_form_block_clienttype_html5', 'bigbluebuttonbn'));
+        $choices = array(bbb_constants::BIGBLUEBUTTON_CLIENTTYPE_FLASH => get_string('mod_form_block_clienttype_flash', 'bigbluebuttonbn'),
+            bbb_constants::BIGBLUEBUTTON_CLIENTTYPE_HTML5 => get_string('mod_form_block_clienttype_html5', 'bigbluebuttonbn'));
         $renderer->render_group_element(
             'clienttype_default',
             $renderer->render_group_element_configselect(

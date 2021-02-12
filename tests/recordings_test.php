@@ -23,6 +23,8 @@
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  */
 
+use mod_bigbluebuttonbn\local\bbb_constants;
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
@@ -50,9 +52,9 @@ class mod_bigbluebuttonbn_recordings_testcase extends advanced_testcase {
      * Model to build
      */
     const BB_ACTIVITIES = [
-        'BBACTIVITY1' => ['courseindex' => 0, 'type' => BIGBLUEBUTTONBN_TYPE_ALL, 'nbrecordings' => 2],
-        'BBACTIVITY2' => ['courseindex' => 0, 'type' => BIGBLUEBUTTONBN_TYPE_ALL, 'nbrecordings' => 3],
-        'BBACTIVITY3' => ['courseindex' => 1, 'type' => BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY, 'nbrecordings' => 3],
+        'BBACTIVITY1' => ['courseindex' => 0, 'type' => bbb_constants::BIGBLUEBUTTONBN_TYPE_ALL, 'nbrecordings' => 2],
+        'BBACTIVITY2' => ['courseindex' => 0, 'type' => bbb_constants::BIGBLUEBUTTONBN_TYPE_ALL, 'nbrecordings' => 3],
+        'BBACTIVITY3' => ['courseindex' => 1, 'type' => bbb_constants::BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY, 'nbrecordings' => 3],
     ];
 
     public function setUp(): void {

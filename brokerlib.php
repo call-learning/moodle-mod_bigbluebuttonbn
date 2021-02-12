@@ -129,7 +129,7 @@ function bigbluebuttonbn_broker_meeting_end($bbbsession, $params) {
         bigbluebuttonbn_event_log(\mod_bigbluebuttonbn\event\events::$events['meeting_end'], $bbbsession['bigbluebuttonbn']);
     }
     // Update the cache.
-    bigbluebuttonbn_get_meeting_info($params['id'], BIGBLUEBUTTONBN_UPDATE_CACHE);
+    bigbluebuttonbn_get_meeting_info($params['id'], bbb_constants::BIGBLUEBUTTONBN_UPDATE_CACHE);
     $callbackresponse = array('status' => true);
     $callbackresponsedata = json_encode($callbackresponse);
     return "{$params['callback']}({$callbackresponsedata});";
