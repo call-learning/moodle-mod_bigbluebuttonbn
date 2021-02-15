@@ -26,6 +26,8 @@
 namespace mod_bigbluebuttonbn\local;
 
 use context_module;
+use curl;
+use Exception;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
@@ -148,7 +150,7 @@ class bigbluebutton {
         $bbbsession['bigbluebuttonbn'] = $bigbluebuttonbn;
         self::view_bbbsession_set($context, $bbbsession);
 
-        $serverversion = bigbluebuttonbn_get_server_version();
+        $serverversion = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_get_server_version();
         $bbbsession['serverversion'] = (string) $serverversion;
 
         // Operation URLs.
@@ -276,7 +278,7 @@ class bigbluebutton {
             $bbbsession = self::build_bbb_session_fromviewinstance($viewinstance);
             if ($bbbsession) {
                 require_once($CFG->dirroot . "/mod/bigbluebuttonbn/brokerlib.php");
-                $info = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], false);
+                $info = \mod_bigbluebuttonbn\local\helpers\meeting::bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], false);
                 $running = false;
                 if ($info['returncode'] == 'SUCCESS') {
                     $running = ($info['running'] === 'true');
@@ -289,5 +291,155 @@ class bigbluebutton {
             }
         }
         return $canjoin;
+    }
+
+    /**
+     * Builds and retunrs a url for joining a bigbluebutton meeting.
+     *
+     * @param string $meetingid
+     * @param string $username
+     * @param string $pw
+     * @param string $logouturl
+     * @param string $configtoken
+     * @param string $userid
+     * @param string $clienttype
+     * @param string $createtime
+     *
+     * @return string
+     */
+    public static function bigbluebuttonbn_get_join_url(
+        $meetingid,
+        $username,
+        $pw,
+        $logouturl,
+        $configtoken = null,
+        $userid = null,
+        $clienttype = bbb_constants::BIGBLUEBUTTON_CLIENTTYPE_FLASH,
+        $createtime = null
+    ) {
+        $data = ['meetingID' => $meetingid,
+            'fullName' => $username,
+            'password' => $pw,
+            'logoutURL' => $logouturl,
+        ];
+        // Choose between Adobe Flash or HTML5 Client.
+        if ($clienttype == bbb_constants::BIGBLUEBUTTON_CLIENTTYPE_HTML5) {
+            $data['joinViaHtml5'] = 'true';
+        }
+        if (!is_null($configtoken)) {
+            $data['configToken'] = $configtoken;
+        }
+        if (!is_null($userid)) {
+            $data['userID'] = $userid;
+        }
+        if (!is_null($createtime)) {
+            $data['createTime'] = $createtime;
+        }
+        return static::action_url('join', $data);
+    }
+
+    /**
+     * Perform api request on BBB.
+     *
+     * @return string
+     */
+    public static function bigbluebuttonbn_get_server_version() {
+        $xml = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
+            \mod_bigbluebuttonbn\local\bigbluebutton::action_url()
+        );
+        if ($xml && $xml->returncode == 'SUCCESS') {
+            return $xml->version;
+        }
+        return null;
+    }
+
+    /**
+     * Perform api request on BBB and wraps the response in an XML object
+     *
+     * @param string $url
+     * @param string $method
+     * @param string $data
+     * @param string $contenttype
+     *
+     * @return object
+     */
+    public static function bigbluebuttonbn_wrap_xml_load_file($url, $method = 'GET', $data = null, $contenttype = 'text/xml') {
+        if (extension_loaded('curl')) {
+            $response =
+                \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_wrap_xml_load_file_curl_request($url, $method, $data, $contenttype);
+            if (!$response) {
+                debugging('No response on wrap_simplexml_load_file', DEBUG_DEVELOPER);
+                return null;
+            }
+            $previous = libxml_use_internal_errors(true);
+            try {
+                $xml = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
+                return $xml;
+            } catch (Exception $e) {
+                libxml_use_internal_errors($previous);
+                $error = 'Caught exception: ' . $e->getMessage();
+                debugging($error, DEBUG_DEVELOPER);
+                return null;
+            }
+        }
+        // Alternative request non CURL based.
+        $previous = libxml_use_internal_errors(true);
+        try {
+            $response = simplexml_load_file($url, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
+            return $response;
+        } catch (Exception $e) {
+            $error = 'Caught exception: ' . $e->getMessage();
+            debugging($error, DEBUG_DEVELOPER);
+            libxml_use_internal_errors($previous);
+            return null;
+        }
+    }
+
+    /**
+     * Perform api request on BBB using CURL and wraps the response in an XML object
+     *
+     * @param string $url
+     * @param string $method
+     * @param string $data
+     * @param string $contenttype
+     *
+     * @return object
+     */
+    public static function bigbluebuttonbn_wrap_xml_load_file_curl_request($url, $method = 'GET', $data = null,
+        $contenttype = 'text/xml') {
+        global $CFG;
+        require_once($CFG->libdir . '/filelib.php');
+        $c = new curl();
+        $c->setopt(array('SSL_VERIFYPEER' => true));
+        if ($method == 'POST') {
+            if (is_null($data) || is_array($data)) {
+                return $c->post($url);
+            }
+            $options = array();
+            $options['CURLOPT_HTTPHEADER'] = array(
+                'Content-Type: ' . $contenttype,
+                'Content-Length: ' . strlen($data),
+                'Content-Language: en-US',
+            );
+
+            return $c->post($url, $data, $options);
+        }
+        if ($method == 'HEAD') {
+            $c->head($url, array('followlocation' => true, 'timeout' => 1));
+            return $c->get_info();
+        }
+        return $c->get($url);
+    }
+
+    /**
+     * Helper function to retrive the default config.xml file.
+     *
+     * @return string
+     */
+    public static function bigbluebuttonbn_get_default_config_xml() {
+        $xml = bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
+            \mod_bigbluebuttonbn\local\bigbluebutton::action_url('getDefaultConfigXML')
+        );
+        return $xml;
     }
 }

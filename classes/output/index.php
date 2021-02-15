@@ -26,12 +26,12 @@
 
 namespace mod_bigbluebuttonbn\output;
 
-use renderable;
+use coding_exception;
 use html_table;
 use html_writer;
-use stdClass;
-use coding_exception;
 use mod_bigbluebuttonbn\plugin;
+use renderable;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -123,7 +123,7 @@ class index implements renderable {
             $urlparams['group'] = $groupobj->id;
             $groupname = $groupobj->name;
         }
-        $meetinginfo = bigbluebuttonbn_get_meeting_info_array($meetingid);
+        $meetinginfo = \mod_bigbluebuttonbn\local\helpers\meeting::bigbluebuttonbn_get_meeting_info_array($meetingid);
         if (empty($meetinginfo)) {
             // The server was unreachable.
             print_error('index_error_unable_display', plugin::COMPONENT);

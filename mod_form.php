@@ -25,6 +25,7 @@
  */
 
 use mod_bigbluebuttonbn\local\bbb_constants;
+use mod_bigbluebuttonbn\local\bigbluebutton;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -49,7 +50,7 @@ class mod_bigbluebuttonbn_mod_form extends moodleform_mod {
         $mform = &$this->_form;
 
         // Validates if the BigBlueButton server is running.
-        $serverversion = bigbluebuttonbn_get_server_version();
+        $serverversion = bigbluebutton::bigbluebuttonbn_get_server_version();
         if (is_null($serverversion)) {
             print_error('general_error_unable_connect', 'bigbluebuttonbn',
                 $CFG->wwwroot.'/admin/settings.php?section=modsettingbigbluebuttonbn');

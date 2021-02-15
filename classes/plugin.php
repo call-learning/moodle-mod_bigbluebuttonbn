@@ -25,8 +25,11 @@
 
 namespace mod_bigbluebuttonbn;
 
+use cache;
+use cache_store;
 use moodle_url;
 use moodle_exception;
+use variable;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -55,6 +58,36 @@ abstract class plugin {
     public static function necurl($url, $params = null, $anchor = null) {
         $lurl = new moodle_url($url, $params, $anchor);
         return $lurl->out(false);
+    }
+
+    /**
+     * Helper for setting a value in a bigbluebuttonbn cache.
+     *
+     * @param  string   $name       BigBlueButtonBN cache
+     * @param  string   $key        Key to be created/updated
+     * @param  variable $value      Default value to be set
+     */
+    public static function bigbluebuttonbn_cache_set($name, $key, $value) {
+        $cache = cache::make_from_params(cache_store::MODE_APPLICATION, 'mod_bigbluebuttonbn', $name);
+        $cache->set($key, $value);
+    }
+
+    /**
+     * Helper for getting a value from a bigbluebuttonbn cache.
+     *
+     * @param  string   $name       BigBlueButtonBN cache
+     * @param  string   $key        Key to be retrieved
+     * @param  integer  $default    Default value in case key is not found or it is empty
+     *
+     * @return variable key value
+     */
+    public static function bigbluebuttonbn_cache_get($name, $key, $default = null) {
+        $cache = cache::make_from_params(cache_store::MODE_APPLICATION, 'mod_bigbluebuttonbn', $name);
+        $result = $cache->get($key);
+        if (!empty($result)) {
+            return $result;
+        }
+        return $default;
     }
 
 }

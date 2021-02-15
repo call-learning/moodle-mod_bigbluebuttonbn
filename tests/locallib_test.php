@@ -23,6 +23,8 @@
  * @author    Laurent David (laurent@call-learning.fr)
  */
 
+use mod_bigbluebuttonbn\local\helpers\recording;
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
@@ -53,11 +55,11 @@ class mod_bigbluebuttonbn_locallib_testcase extends advanced_testcase {
      */
     public function test_bigbluebuttonbn_get_recording_type_text() {
         $this->resetAfterTest(true);
-        $this->assertEquals('Presentation', bigbluebuttonbn_get_recording_type_text('presentation'));
-        $this->assertEquals('Video', bigbluebuttonbn_get_recording_type_text('video'));
-        $this->assertEquals('Videos', bigbluebuttonbn_get_recording_type_text('videos'));
-        $this->assertEquals('Whatever', bigbluebuttonbn_get_recording_type_text('whatever'));
-        $this->assertEquals('Whatever It Can Be', bigbluebuttonbn_get_recording_type_text('whatever it can be'));
+        $this->assertEquals('Presentation', recording::bigbluebuttonbn_get_recording_type_text('presentation'));
+        $this->assertEquals('Video', recording::bigbluebuttonbn_get_recording_type_text('video'));
+        $this->assertEquals('Videos', recording::bigbluebuttonbn_get_recording_type_text('videos'));
+        $this->assertEquals('Whatever', recording::bigbluebuttonbn_get_recording_type_text('whatever'));
+        $this->assertEquals('Whatever It Can Be', recording::bigbluebuttonbn_get_recording_type_text('whatever it can be'));
     }
 
     public function test_bigbluebuttonbn_get_users_select_separate_groups_prevent_all() {

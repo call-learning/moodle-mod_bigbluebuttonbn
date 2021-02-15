@@ -47,7 +47,7 @@ class mobileview {
         if ($bbbsession['administrator'] || $bbbsession['moderator']) {
             $password = $bbbsession['modPW'];
         }
-        $joinurl = bigbluebuttonbn_get_join_url($bbbsession['meetingid'], $bbbsession['username'],
+        $joinurl = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_get_join_url($bbbsession['meetingid'], $bbbsession['username'],
             $password, $bbbsession['logoutURL'], null, $bbbsession['userID'], $bbbsession['clienttype'],
             $bbbsession['createtime']);
 
@@ -81,7 +81,7 @@ class mobileview {
      * @return array
      */
     public static function create_meeting_metadata(&$bbbsession) {
-        return bigbluebuttonbn_create_meeting_metadata($bbbsession);
+        return \mod_bigbluebuttonbn\local\helpers\meeting::bigbluebuttonbn_create_meeting_metadata($bbbsession);
     }
 
     /**

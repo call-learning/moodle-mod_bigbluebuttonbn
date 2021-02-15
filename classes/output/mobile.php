@@ -141,10 +141,10 @@ class mobile {
         }
 
         // See if the BBB session is already in progress.
-        if (!bigbluebuttonbn_is_meeting_running($bbbsession['meetingid'])) {
+        if (!\mod_bigbluebuttonbn\local\helpers\recording::bigbluebuttonbn_is_meeting_running($bbbsession['meetingid'])) {
 
             // The meeting doesnt exist in BBB server, must be created.
-            $response = bigbluebuttonbn_get_create_meeting_array(
+            $response = \mod_bigbluebuttonbn\local\helpers\recording::bigbluebuttonbn_get_create_meeting_array(
                 \mod_bigbluebuttonbn\local\mobileview::create_meeting_data($bbbsession),
                 \mod_bigbluebuttonbn\local\mobileview::create_meeting_metadata($bbbsession),
                 $bbbsession['presentation']['name'],
@@ -178,13 +178,14 @@ class mobile {
             // Insert a record that meeting was created.
             $overrides = array('meetingid' => $bbbsession['meetingid']);
             $meta = '{"record":'.($bbbsession['record'] ? 'true' : 'false').'}';
-            \mod_bigbluebuttonbn\output\bigbluebuttonbn_log($bbbsession['bigbluebuttonbn'],
+            \mod_bigbluebuttonbn\local\helpers\logs::bigbluebuttonbn_log($bbbsession['bigbluebuttonbn'],
                 bbb_constants::BIGBLUEBUTTONBN_LOG_EVENT_CREATE, $overrides, $meta);
         }
 
         // It is part of 'bigbluebuttonbn_bbb_view_join_meeting' in bbb_view.
         // Update the cache.
-        $meetinginfo = bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], bbb_constants::BIGBLUEBUTTONBN_UPDATE_CACHE);
+        $meetinginfo = \mod_bigbluebuttonbn\local\helpers\meeting::bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'],
+            bbb_constants::BIGBLUEBUTTONBN_UPDATE_CACHE);
         if ($bbbsession['userlimit'] > 0 && intval($meetinginfo['participantCount']) >= $bbbsession['userlimit']) {
             // No more users allowed to join.
             $message = get_string('view_error_userlimit_reached', 'bigbluebuttonbn');

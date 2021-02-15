@@ -26,6 +26,7 @@
  */
 
 use mod_bigbluebuttonbn\local\bbb_constants;
+use mod_bigbluebuttonbn\local\helpers\recording;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -249,7 +250,7 @@ function bigbluebuttonbn_view_render_room(&$bbbsession, $activity, &$jsvars) {
  * @return string
  */
 function bigbluebuttonbn_view_render_recordings(&$bbbsession, $enabledfeatures, &$jsvars) {
-    $recordings = bigbluebutton_get_recordings_for_table_view($bbbsession, $enabledfeatures);
+    $recordings = recording::bigbluebutton_get_recordings_for_table_view($bbbsession, $enabledfeatures);
 
     if (empty($recordings) || array_key_exists('messageKey', $recordings)) {
         // There are no recordings to be shown.
@@ -264,7 +265,7 @@ function bigbluebuttonbn_view_render_recordings(&$bbbsession, $enabledfeatures, 
     // If there are meetings with recordings load the data to the table.
     if ($bbbsession['bigbluebuttonbn']->recordings_html) {
         // Render a plain html table.
-        return bigbluebuttonbn_output_recording_table($bbbsession, $recordings)."\n";
+        return recording::bigbluebuttonbn_output_recording_table($bbbsession, $recordings) ."\n";
     }
     // JavaScript variables for recordings with YUI.
     $jsvars += array(

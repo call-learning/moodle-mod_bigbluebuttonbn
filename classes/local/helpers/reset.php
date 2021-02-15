@@ -22,11 +22,8 @@
  * @author    Laurent David  (laurent [at] call-learning [dt] fr)
  */
 namespace mod_bigbluebuttonbn\local\helpers;
-use cache;
-use cache_store;
 use context_module;
 use core_tag_tag;
-use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -63,7 +60,7 @@ class reset {
         // Criteria for search [courseid | bigbluebuttonbn=null | subset=false | includedeleted=true].
         $recordings = bigbluebuttonbn_get_recordings($courseid, null, false, true);
         // Remove all the recordings.
-        bigbluebuttonbn_delete_recordings(implode(",", array_keys($recordings)));
+        \mod_bigbluebuttonbn\local\helpers\recording::bigbluebuttonbn_delete_recordings(implode(",", array_keys($recordings)));
     }
 
     /**

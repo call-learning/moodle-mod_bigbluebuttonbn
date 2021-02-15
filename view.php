@@ -25,6 +25,7 @@
  * @author    Darko Miletic  (darko.miletic [at] gmail [dt] com)
  */
 
+use mod_bigbluebuttonbn\local\bigbluebutton;
 use mod_bigbluebuttonbn\plugin;
 
 require(__DIR__.'/../../config.php');
@@ -58,7 +59,7 @@ $bbbsession['bigbluebuttonbn'] = $bigbluebuttonbn;
 mod_bigbluebuttonbn\local\bigbluebutton::view_bbbsession_set($PAGE->context, $bbbsession);
 
 // Validates if the BigBlueButton server is working.
-$serverversion = bigbluebuttonbn_get_server_version();  // In locallib.
+$serverversion = bigbluebutton::bigbluebuttonbn_get_server_version();  // In locallib.
 if ($serverversion === null) {
     $errmsg = 'view_error_unable_join_student';
     $errurl = '/course/view.php';

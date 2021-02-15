@@ -24,9 +24,10 @@
  * @author    Fred Dixon  (ffdixon [at] blindsidenetworks [dt] com)
  */
 
-use mod_bigbluebuttonbn\plugin;
-use mod_bigbluebuttonbn\output\renderer;
+use mod_bigbluebuttonbn\local\helpers\meeting;
 use mod_bigbluebuttonbn\output\index;
+use mod_bigbluebuttonbn\output\renderer;
+use mod_bigbluebuttonbn\plugin;
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/locallib.php');
@@ -71,7 +72,7 @@ if ($action === 'end') {
             $meetingid .= sprintf('[%d]', $g);
         }
 
-        bigbluebuttonbn_end_meeting($meetingid, $bigbluebuttonbn->moderatorpass);
+        meeting::bigbluebuttonbn_end_meeting($meetingid, $bigbluebuttonbn->moderatorpass);
         redirect($PAGE->url);
     }
 }

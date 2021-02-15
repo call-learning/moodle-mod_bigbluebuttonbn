@@ -25,14 +25,11 @@
 
 namespace mod_bigbluebuttonbn\output;
 
+use mod_bigbluebuttonbn\plugin;
 use renderable;
 use renderer_base;
-use templatable;
-use html_table;
-use html_writer;
 use stdClass;
-use coding_exception;
-use mod_bigbluebuttonbn\plugin;
+use templatable;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -99,7 +96,8 @@ class import_view implements renderable, templatable {
             // Proceed with rendering.
             if (!empty($recordings)) {
                 $this->context['recordings'] = true;
-                $this->context['recordingtable'] = bigbluebuttonbn_output_recording_table($bbbsession, $recordings, ['import']);
+                $this->context['recordingtable'] =
+                    \mod_bigbluebuttonbn\local\helpers\recording::bigbluebuttonbn_output_recording_table($bbbsession, $recordings, ['import']);
             }
             // JavaScript for locales.
             $PAGE->requires->strings_for_js(array_keys(bigbluebuttonbn_get_strings_for_js()), 'bigbluebuttonbn');
