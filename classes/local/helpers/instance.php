@@ -25,6 +25,8 @@ namespace mod_bigbluebuttonbn\local\helpers;
 
 use calendar_event;
 use mod_bigbluebuttonbn\local\bbb_constants;
+use mod_bigbluebuttonbn\local\notifier;
+use mod_bigbluebuttonbn\plugin;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -68,8 +70,9 @@ class instance {
             $bigbluebuttonbn->timecreated = time();
             $bigbluebuttonbn->timemodified = 0;
             // As it is a new activity, assign passwords.
-            $bigbluebuttonbn->moderatorpass = bigbluebuttonbn_random_password(12);
-            $bigbluebuttonbn->viewerpass = bigbluebuttonbn_random_password(12, $bigbluebuttonbn->moderatorpass);
+            $bigbluebuttonbn->moderatorpass = plugin::bigbluebuttonbn_random_password(12);
+            $bigbluebuttonbn->viewerpass =
+                plugin::bigbluebuttonbn_random_password(12, $bigbluebuttonbn->moderatorpass);
         }
     }
 
@@ -182,7 +185,7 @@ class instance {
         if (isset($bigbluebuttonbn->add) && !empty($bigbluebuttonbn->add)) {
             $action = get_string('mod_form_field_notification_msg_created', 'bigbluebuttonbn');
         }
-        \mod_bigbluebuttonbn\local\notifier::notify_instance_updated($bigbluebuttonbn, $action);
+        notifier::notify_instance_updated($bigbluebuttonbn, $action);
     }
 
     /**

@@ -23,7 +23,7 @@
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  */
 
-namespace mod_bigbluebuttonbn\settings;
+namespace mod_bigbluebuttonbn\local\settings;
 
 defined('MOODLE_INTERNAL') || die();
 

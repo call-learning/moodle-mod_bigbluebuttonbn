@@ -23,7 +23,10 @@
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  */
 
+use mod_bigbluebuttonbn\local\bigbluebutton;
 use mod_bigbluebuttonbn\local\broker;
+use mod_bigbluebuttonbn\local\config;
+use mod_bigbluebuttonbn\local\view;
 
 define('AJAX_SCRIPT', true);
 
@@ -56,7 +59,7 @@ if (!empty($error)) {
 }
 
 if ($params['bigbluebuttonbn']) {
-    $bbbbrokerinstance = bigbluebuttonbn_view_instance_bigbluebuttonbn($params['bigbluebuttonbn']);
+    $bbbbrokerinstance = view::bigbluebuttonbn_view_instance_bigbluebuttonbn($params['bigbluebuttonbn']);
     $cm = $bbbbrokerinstance['cm'];
     $bigbluebuttonbn = $bbbbrokerinstance['bigbluebuttonbn'];
     $context = context_module::instance($cm->id);
@@ -84,8 +87,8 @@ if (isset($bbbsession['bigbluebuttonbn']->type)) {
     $type = $bbbsession['bigbluebuttonbn']->type;
 }
 
-$typeprofiles = bigbluebuttonbn_get_instance_type_profiles();
-$enabledfeatures = bigbluebuttonbn_get_enabled_features($typeprofiles, $type);
+$typeprofiles = bigbluebutton::bigbluebuttonbn_get_instance_type_profiles();
+$enabledfeatures = config::bigbluebuttonbn_get_enabled_features($typeprofiles, $type);
 try {
     header('Content-Type: application/javascript; charset=utf-8');
     $a = strtolower($params['action']);

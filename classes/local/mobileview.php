@@ -24,6 +24,8 @@
 
 namespace mod_bigbluebuttonbn\local;
 
+use mod_bigbluebuttonbn\local\helpers\meeting;
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
@@ -47,7 +49,7 @@ class mobileview {
         if ($bbbsession['administrator'] || $bbbsession['moderator']) {
             $password = $bbbsession['modPW'];
         }
-        $joinurl = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_get_join_url($bbbsession['meetingid'], $bbbsession['username'],
+        $joinurl = bigbluebutton::bigbluebuttonbn_get_join_url($bbbsession['meetingid'], $bbbsession['username'],
             $password, $bbbsession['logoutURL'], null, $bbbsession['userID'], $bbbsession['clienttype'],
             $bbbsession['createtime']);
 
@@ -81,7 +83,7 @@ class mobileview {
      * @return array
      */
     public static function create_meeting_metadata(&$bbbsession) {
-        return \mod_bigbluebuttonbn\local\helpers\meeting::bigbluebuttonbn_create_meeting_metadata($bbbsession);
+        return meeting::bigbluebuttonbn_create_meeting_metadata($bbbsession);
     }
 
     /**
@@ -92,7 +94,7 @@ class mobileview {
      */
     public static function create_meeting_data(&$bbbsession) {
         $data = ['meetingID' => $bbbsession['meetingid'],
-            'name' => bigbluebuttonbn_html2text($bbbsession['meetingname'], 64),
+            'name' => \mod_bigbluebuttonbn\plugin::bigbluebuttonbn_html2text($bbbsession['meetingname'], 64),
             'attendeePW' => $bbbsession['viewerPW'],
             'moderatorPW' => $bbbsession['modPW'],
             'logoutURL' => $bbbsession['logoutURL'],
@@ -139,7 +141,7 @@ class mobileview {
      * @return string
      */
     public static function create_meeting_data_record($record) {
-        if ((boolean)\mod_bigbluebuttonbn\local\config::recordings_enabled() && $record) {
+        if ((boolean) config::recordings_enabled() && $record) {
             return 'true';
         }
         return 'false';
@@ -152,8 +154,8 @@ class mobileview {
      * @return integer
      */
     public static function create_meeting_data_duration($closingtime) {
-        if ((boolean)\mod_bigbluebuttonbn\local\config::get('scheduled_duration_enabled')) {
-            return bigbluebuttonbn_get_duration($closingtime);
+        if ((boolean) config::get('scheduled_duration_enabled')) {
+            return bigbluebutton::bigbluebuttonbn_get_duration($closingtime);
         }
         return 0;
     }

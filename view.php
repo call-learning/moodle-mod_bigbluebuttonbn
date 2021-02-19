@@ -26,6 +26,7 @@
  */
 
 use mod_bigbluebuttonbn\local\bigbluebutton;
+use mod_bigbluebuttonbn\local\helpers\logs;
 use mod_bigbluebuttonbn\local\view;
 use mod_bigbluebuttonbn\plugin;
 
@@ -36,7 +37,7 @@ $id = required_param('id', PARAM_INT);
 $bn = optional_param('bn', 0, PARAM_INT);
 $group = optional_param('group', 0, PARAM_INT);
 
-$viewinstance = bigbluebuttonbn_view_validator($id, $bn); // In locallib.
+$viewinstance = view::bigbluebuttonbn_view_validator($id, $bn); // In locallib.
 if (!$viewinstance) {
     print_error('view_error_url_missing_parameters', plugin::COMPONENT);
 }
@@ -48,7 +49,7 @@ $bigbluebuttonbn = $viewinstance['bigbluebuttonbn'];
 require_login($course, true, $cm);
 
 // In locallib.
-bigbluebuttonbn_event_log(\mod_bigbluebuttonbn\event\events::$events['view'], $bigbluebuttonbn);
+logs::bigbluebuttonbn_event_log(\mod_bigbluebuttonbn\event\events::$events['view'], $bigbluebuttonbn);
 
 // Additional info related to the course.
 $bbbsession['course'] = $course;
@@ -104,7 +105,7 @@ if (!has_any_capability(['moodle/category:manage', 'mod/bigbluebuttonbn:join'], 
     exit;
 }
 
-$activitystatus = bigbluebuttonbn_view_session_config($bbbsession, $id);
+$activitystatus = bigbluebutton::bigbluebuttonbn_view_session_config($bbbsession, $id);
 
 // Output starts.
 echo $OUTPUT->header();

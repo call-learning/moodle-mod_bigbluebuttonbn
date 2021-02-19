@@ -27,6 +27,9 @@ use cache;
 use cache_store;
 use context_course;
 use mod_bigbluebuttonbn\local\bbb_constants;
+use mod_bigbluebuttonbn\local\bigbluebutton;
+use mod_bigbluebuttonbn\local\config;
+use mod_bigbluebuttonbn\plugin;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -51,7 +54,7 @@ class meeting {
      * @return array
      */
     public static function bigbluebuttonbn_get_create_meeting_array($data, $metadata = array(), $pname = null, $purl = null) {
-        $createmeetingurl = \mod_bigbluebuttonbn\local\bigbluebutton::action_url('create', $data, $metadata);
+        $createmeetingurl = bigbluebutton::action_url('create', $data, $metadata);
         $method = 'GET';
         $payload = null;
         if (!is_null($pname) && !is_null($purl)) {
@@ -59,7 +62,7 @@ class meeting {
             $payload = "<?xml version='1.0' encoding='UTF-8'?><modules><module name='presentation'><document url='" .
                 $purl . "' /></module></modules>";
         }
-        $xml = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_wrap_xml_load_file($createmeetingurl, $method, $payload);
+        $xml = bigbluebutton::bigbluebuttonbn_wrap_xml_load_file($createmeetingurl, $method, $payload);
         if ($xml) {
             $response = array('returncode' => $xml->returncode, 'message' => $xml->message, 'messageKey' => $xml->messageKey);
             if ($xml->meetingID) {
@@ -79,8 +82,8 @@ class meeting {
      * @return array
      */
     public static function bigbluebuttonbn_get_meeting_info_array($meetingid) {
-        $xml = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
-            \mod_bigbluebuttonbn\local\bigbluebutton::action_url('getMeetingInfo', ['meetingID' => $meetingid])
+        $xml = bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
+            bigbluebutton::action_url('getMeetingInfo', ['meetingID' => $meetingid])
         );
         if ($xml && $xml->returncode == 'SUCCESS' && empty($xml->messageKey)) {
             // Meeting info was returned.
@@ -114,8 +117,8 @@ class meeting {
      * @param string $modpw
      */
     public static function bigbluebuttonbn_end_meeting($meetingid, $modpw) {
-        $xml = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
-            \mod_bigbluebuttonbn\local\bigbluebutton::action_url('end', ['meetingID' => $meetingid, 'password' => $modpw])
+        $xml = bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
+            bigbluebutton::action_url('end', ['meetingID' => $meetingid, 'password' => $modpw])
         );
         if ($xml) {
             // If the xml packet returned failure it displays the message to the user.
@@ -134,7 +137,7 @@ class meeting {
      * @return array
      */
     public static function bigbluebuttonbn_get_meeting_info($meetingid, $updatecache = false) {
-        $cachettl = (int) \mod_bigbluebuttonbn\local\config::get('waitformoderator_cache_ttl');
+        $cachettl = (int) config::get('waitformoderator_cache_ttl');
         $cache = cache::make_from_params(cache_store::MODE_APPLICATION, 'mod_bigbluebuttonbn', 'meetings_cache');
         $result = $cache->get($meetingid);
         $now = time();
@@ -143,8 +146,8 @@ class meeting {
             return (array) json_decode($result['meeting_info']);
         }
         // Ping again and refresh the cache.
-        $meetinginfo = (array) \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
-            \mod_bigbluebuttonbn\local\bigbluebutton::action_url('getMeetingInfo', ['meetingID' => $meetingid])
+        $meetinginfo = (array) bigbluebutton::bigbluebuttonbn_wrap_xml_load_file(
+            bigbluebutton::action_url('getMeetingInfo', ['meetingID' => $meetingid])
         );
         $cache->set($meetingid, array('creation_time' => time(), 'meeting_info' => json_encode($meetinginfo)));
         return $meetinginfo;
@@ -162,7 +165,7 @@ class meeting {
         /* As a workaround to isMeetingRunning that always return SUCCESS but only returns true
          * when at least one user is in the session, we use getMeetingInfo instead.
          */
-        $meetinginfo = meeting::bigbluebuttonbn_get_meeting_info($meetingid, $updatecache);
+        $meetinginfo = self::bigbluebuttonbn_get_meeting_info($meetingid, $updatecache);
         return ($meetinginfo['returncode'] === 'SUCCESS');
     }
 
@@ -188,7 +191,7 @@ class meeting {
             logs::bigbluebuttonbn_log($bigbluebuttonbn, bbb_constants::BIGBLUEBUTTON_LOG_EVENT_SUMMARY, $overrides,
                 json_encode($meta));
             // Enqueue a task for processing the completion.
-            bigbluebuttonbn_enqueue_completion_update($bigbluebuttonbn, $userid);
+            bigbluebutton::bigbluebuttonbn_enqueue_completion_update($bigbluebuttonbn, $userid);
         }
     }
 
@@ -211,12 +214,13 @@ class meeting {
             'bbb-context-id' => $bbbsession['course']->id,
             'bbb-context-name' => trim(html_to_text($bbbsession['course']->fullname, 0)),
             'bbb-context-label' => trim(html_to_text($bbbsession['course']->shortname, 0)),
-            'bbb-recording-name' => bigbluebuttonbn_html2text($bbbsession['meetingname'], 64),
-            'bbb-recording-description' => bigbluebuttonbn_html2text($bbbsession['meetingdescription'], 64),
-            'bbb-recording-tags' => bigbluebuttonbn_get_tags($bbbsession['cm']->id), // Same as $id.
+            'bbb-recording-name' => plugin::bigbluebuttonbn_html2text($bbbsession['meetingname'], 64),
+            'bbb-recording-description' => plugin::bigbluebuttonbn_html2text($bbbsession['meetingdescription'],
+                64),
+            'bbb-recording-tags' => \mod_bigbluebuttonbn\plugin::bigbluebuttonbn_get_tags($bbbsession['cm']->id), // Same as $id.
         ];
         // Special metadata for recording processing.
-        if ((boolean) \mod_bigbluebuttonbn\local\config::get('recordingstatus_enabled')) {
+        if ((boolean) config::get('recordingstatus_enabled')) {
             $metadata["bn-recording-status"] = json_encode(
                 array(
                     'email' => array('"' . fullname($USER) . '" <' . $USER->email . '>'),
@@ -224,10 +228,10 @@ class meeting {
                 )
             );
         }
-        if ((boolean) \mod_bigbluebuttonbn\local\config::get('recordingready_enabled')) {
+        if ((boolean) config::get('recordingready_enabled')) {
             $metadata['bn-recording-ready-url'] = $bbbsession['recordingReadyURL'];
         }
-        if ((boolean) \mod_bigbluebuttonbn\local\config::get('meetingevents_enabled')) {
+        if ((boolean) config::get('meetingevents_enabled')) {
             $metadata['analytics-callback-url'] = $bbbsession['meetingEventsURL'];
         }
         return $metadata;
@@ -248,14 +252,14 @@ class meeting {
             $mid = $bigbluebuttonbn->meetingid . '-' . $bigbluebuttonbn->course . '-' . $bigbluebuttonbn->id;
         }
         // When meeting is running, all authorized users can join right in.
-        if (meeting::bigbluebuttonbn_is_meeting_running($mid)) {
+        if (self::bigbluebuttonbn_is_meeting_running($mid)) {
             return array(true, get_string('view_message_conference_in_progress', 'bigbluebuttonbn'));
         }
         // When meeting is not running, see if the user can join.
         $context = context_course::instance($bigbluebuttonbn->course);
-        $participantlist = bigbluebuttonbn_get_participant_list($bigbluebuttonbn, $context);
+        $participantlist = roles::bigbluebuttonbn_get_participant_list($bigbluebuttonbn, $context);
         $isadmin = is_siteadmin($userid);
-        $ismoderator = bigbluebuttonbn_is_moderator($context, $participantlist, $userid);
+        $ismoderator = roles::bigbluebuttonbn_is_moderator($context, $participantlist, $userid);
         // If user is administrator, moderator or if is viewer and no waiting is required, join allowed.
         if ($isadmin || $ismoderator || !$bigbluebuttonbn->wait) {
             return array(true, get_string('view_message_conference_room_ready', 'bigbluebuttonbn'));
@@ -273,8 +277,8 @@ class meeting {
      */
     public static function bigbluebuttonbn_end_meeting_if_running($bigbluebuttonbn) {
         $meetingid = $bigbluebuttonbn->meetingid . '-' . $bigbluebuttonbn->course . '-' . $bigbluebuttonbn->id;
-        if (meeting::bigbluebuttonbn_is_meeting_running($meetingid)) {
-            meeting::bigbluebuttonbn_end_meeting($meetingid, $bigbluebuttonbn->moderatorpass);
+        if (self::bigbluebuttonbn_is_meeting_running($meetingid)) {
+            self::bigbluebuttonbn_end_meeting($meetingid, $bigbluebuttonbn->moderatorpass);
         }
     }
 }

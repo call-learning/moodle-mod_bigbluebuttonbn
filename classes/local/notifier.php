@@ -100,8 +100,8 @@ class notifier
         if (!empty($bigbluebuttonbn->intro)) {
             $msg->activity_description = format_string(trim($bigbluebuttonbn->intro));
         }
-        $msg->activity_openingtime = bigbluebuttonbn_format_activity_time($bigbluebuttonbn->openingtime);
-        $msg->activity_closingtime = bigbluebuttonbn_format_activity_time($bigbluebuttonbn->closingtime);
+        $msg->activity_openingtime = view::bigbluebuttonbn_format_activity_time($bigbluebuttonbn->openingtime);
+        $msg->activity_closingtime = view::bigbluebuttonbn_format_activity_time($bigbluebuttonbn->closingtime);
         $msg->activity_owner = fullname($sender);
 
         $msg->user_name = fullname($sender);

@@ -24,6 +24,8 @@
  * @author    Fred Dixon  (ffdixon [at] blindsidenetworks [dt] com)
  */
 
+use mod_bigbluebuttonbn\plugin;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(dirname(dirname(__FILE__)).'/locallib.php');
@@ -124,8 +126,8 @@ function xmldb_bigbluebuttonbn_upgrade($oldversion = 0) {
             $sql .= "WHERE moderatorpass = ? OR viewerpass = ?";
             $instances = $DB->get_records_sql($sql, array('', ''));
             foreach ($instances as $instance) {
-                $instance->moderatorpass = bigbluebuttonbn_random_password(12);
-                $instance->viewerpass = bigbluebuttonbn_random_password(12, $instance->moderatorpass);
+                $instance->moderatorpass = plugin::bigbluebuttonbn_random_password(12);
+                $instance->viewerpass = plugin::bigbluebuttonbn_random_password(12, $instance->moderatorpass);
                 // Store passwords in the database.
                 $DB->update_record('bigbluebuttonbn', $instance);
             }

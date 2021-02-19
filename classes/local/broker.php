@@ -27,6 +27,7 @@ namespace mod_bigbluebuttonbn\local;
 
 use coding_exception;
 use Exception;
+use mod_bigbluebuttonbn\event\events;
 use mod_bigbluebuttonbn\local\helpers\logs;
 use mod_bigbluebuttonbn\local\helpers\meeting;
 use mod_bigbluebuttonbn\local\helpers\recording;
@@ -140,7 +141,8 @@ class broker {
         meeting::bigbluebuttonbn_end_meeting($params['id'], $bbbsession['modPW']);
         // Moodle event logger: Create an event for meeting ended.
         if (isset($bbbsession['bigbluebuttonbn'])) {
-            bigbluebuttonbn_event_log(\mod_bigbluebuttonbn\event\events::$events['meeting_end'], $bbbsession['bigbluebuttonbn']);
+            \mod_bigbluebuttonbn\local\helpers\logs::bigbluebuttonbn_event_log(events::$events['meeting_end'],
+                $bbbsession['bigbluebuttonbn']);
         }
         // Update the cache.
         meeting::bigbluebuttonbn_get_meeting_info($params['id'], bbb_constants::BIGBLUEBUTTONBN_UPDATE_CACHE);
@@ -164,7 +166,7 @@ class broker {
         }
         $callbackresponse = array('status' => false);
         if (isset($params['id']) && $params['id'] != '') {
-            $importedall = bigbluebuttonbn_get_recording_imported_instances($params['id']);
+            $importedall = recording::bigbluebuttonbn_get_recording_imported_instances($params['id']);
             $callbackresponse['status'] = true;
             $callbackresponse['links'] = count($importedall);
         }
@@ -194,7 +196,8 @@ class broker {
         }
         $includedeleted = $bbbsession['bigbluebuttonbn']->recordings_deleted;
         // Retrieve the array of imported recordings.
-        $recordings = bigbluebuttonbn_get_allrecordings($courseid, $bigbluebuttonbnid, $showroom, $includedeleted);
+        $recordings =
+            recording::bigbluebuttonbn_get_allrecordings($courseid, $bigbluebuttonbnid, $showroom, $includedeleted);
         if (array_key_exists($params['id'], $recordings)) {
             // Look up for an update on the imported recording.
             if (!array_key_exists('messageKey', $recordings[$params['id']])) {
@@ -279,7 +282,7 @@ class broker {
         if ($showroom) {
             $bigbluebuttonbnid = $bbbsession['bigbluebuttonbn']->id;
         }
-        $recordings = bigbluebuttonbn_get_allrecordings(
+        $recordings = recording::bigbluebuttonbn_get_allrecordings(
             $bbbsession['course']->id,
             $bigbluebuttonbnid,
             $showroom,
@@ -292,8 +295,8 @@ class broker {
             self::recording_action_perform($action, $params, $recordings);
         if ($callbackresponse['status']) {
             // Moodle event logger: Create an event for action performed on recording.
-            bigbluebuttonbn_event_log(
-                \mod_bigbluebuttonbn\event\events::$events[$action],
+            \mod_bigbluebuttonbn\local\helpers\logs::bigbluebuttonbn_event_log(
+                events::$events[$action],
                 $bbbsession['bigbluebuttonbn'],
                 ['other' => $params['id']]
             );
@@ -362,7 +365,7 @@ class broker {
                 );
             }
             return array(
-                'status' => bigbluebuttonbn_publish_recording_imported(
+                'status' => recording::bigbluebuttonbn_publish_recording_imported(
                     $recordings[$params['id']]['imported'],
                     true
                 )
@@ -406,7 +409,7 @@ class broker {
                 );
             }
             return array(
-                'status' => bigbluebuttonbn_protect_recording_imported(
+                'status' => recording::bigbluebuttonbn_protect_recording_imported(
                     $recordings[$params['id']]['imported'],
                     false
                 )
@@ -434,7 +437,7 @@ class broker {
         if (self::recording_is_imported($recordings, $params['id'])) {
             // Execute unpublish or protect on imported recording link.
             return array(
-                'status' => bigbluebuttonbn_publish_recording_imported(
+                'status' => recording::bigbluebuttonbn_publish_recording_imported(
                     $recordings[$params['id']]['imported'],
                     false
                 )
@@ -442,7 +445,7 @@ class broker {
         }
         // As the recordingid was not identified as imported recording link, execute unpublish on a real recording.
         // First: Unpublish imported links associated to the recording.
-        $importedall = bigbluebuttonbn_get_recording_imported_instances($params['id']);
+        $importedall = recording::bigbluebuttonbn_get_recording_imported_instances($params['id']);
         foreach ($importedall as $key => $record) {
             $meta = json_decode($record->meta, true);
             // Prepare data for the update.
@@ -473,7 +476,7 @@ class broker {
         if (self::recording_is_imported($recordings, $params['id'])) {
             // Execute unpublish or protect on imported recording link.
             return array(
-                'status' => bigbluebuttonbn_protect_recording_imported(
+                'status' => recording::bigbluebuttonbn_protect_recording_imported(
                     $recordings[$params['id']]['imported'],
                     true
                 )
@@ -481,7 +484,7 @@ class broker {
         }
         // As the recordingid was not identified as imported recording link, execute protect on a real recording.
         // First: Protect imported links associated to the recording.
-        $importedall = bigbluebuttonbn_get_recording_imported_instances($params['id']);
+        $importedall = recording::bigbluebuttonbn_get_recording_imported_instances($params['id']);
         foreach ($importedall as $key => $record) {
             $meta = json_decode($record->meta, true);
             // Prepare data for the update.
@@ -512,14 +515,14 @@ class broker {
         if (self::recording_is_imported($recordings, $params['id'])) {
             // Execute delete on imported recording link.
             return array(
-                'status' => bigbluebuttonbn_delete_recording_imported(
+                'status' => recording::bigbluebuttonbn_delete_recording_imported(
                     $recordings[$params['id']]['imported']
                 )
             );
         }
         // As the recordingid was not identified as imported recording link, execute delete on a real recording.
         // First: Delete imported links associated to the recording.
-        $importedall = bigbluebuttonbn_get_recording_imported_instances($params['id']);
+        $importedall = recording::bigbluebuttonbn_get_recording_imported_instances($params['id']);
         if ($importedall > 0) {
             foreach (array_keys($importedall) as $key) {
                 // Execute delete on imported links.
@@ -544,7 +547,7 @@ class broker {
         if (self::recording_is_imported($recordings, $params['id'])) {
             // Execute update on imported recording link.
             return array(
-                'status' => bigbluebuttonbn_update_recording_imported(
+                'status' => recording::bigbluebuttonbn_update_recording_imported(
                     $recordings[$params['id']]['imported'],
                     json_decode($params['meta'], true)
                 )
@@ -575,7 +578,7 @@ class broker {
         try {
             $decodedparameters = \Firebase\JWT\JWT::decode(
                 $params['signed_parameters'],
-                \mod_bigbluebuttonbn\local\config::get('shared_secret'),
+                config::get('shared_secret'),
                 array('HS256')
             );
         } catch (Exception $e) {
@@ -601,7 +604,7 @@ class broker {
                 return;
             }
             // We make sure messages are sent only once.
-            if (bigbluebuttonbn_get_count_callback_event_log($decodedparameters->record_id) == 0) {
+            if (\mod_bigbluebuttonbn\local\helpers\logs::bigbluebuttonbn_get_count_callback_event_log($decodedparameters->record_id) == 0) {
                 recording::bigbluebuttonbn_send_notification_recording_ready($bigbluebuttonbn);
             }
             $overrides = array('meetingid' => $decodedparameters->meeting_id);
@@ -644,8 +647,8 @@ class broker {
             $meta);
         // Moodle event logger: Create an event for recording imported.
         if (isset($bbbsession['bigbluebutton']) && isset($bbbsession['cm'])) {
-            bigbluebuttonbn_event_log(
-                \mod_bigbluebuttonbn\event\events::$events['recording_import'],
+            \mod_bigbluebuttonbn\local\helpers\logs::bigbluebuttonbn_event_log(
+                events::$events['recording_import'],
                 $bbbsession['bigbluebuttonbn'],
                 ['other' => $params['id']]
             );
@@ -683,7 +686,7 @@ class broker {
             // Verify the authenticity of the request.
             $token = \Firebase\JWT\JWT::decode(
                 $authorization[1],
-                \mod_bigbluebuttonbn\local\config::get('shared_secret'),
+                config::get('shared_secret'),
                 array('HS512')
             );
 
@@ -713,7 +716,7 @@ class broker {
         $meta['callback'] = 'meeting_events';
         logs::bigbluebuttonbn_log($bigbluebuttonbn, bbb_constants::BIGBLUEBUTTON_LOG_EVENT_CALLBACK, $overrides,
             json_encode($meta));
-        if (bigbluebuttonbn_get_count_callback_event_log($meta['recordid'], 'meeting_events') == 1) {
+        if (recording::bigbluebuttonbn_get_count_callback_event_log($meta['recordid'], 'meeting_events') == 1) {
             // Process the events.
             meeting::bigbluebuttonbn_process_meeting_events($bigbluebuttonbn, $jsonobj);
             header('HTTP/1.0 200 Accepted. Enqueued.');
@@ -857,7 +860,7 @@ class broker {
         $users = get_enrolled_users($context, 'mod/bigbluebuttonbn:view', 0, 'u.*', $sort);
         foreach ($users as $user) {
             // Enqueue a task for processing the completion.
-            bigbluebuttonbn_enqueue_completion_update($bigbluebuttonbn, $user->id);
+            \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_enqueue_completion_update($bigbluebuttonbn, $user->id);
         }
         $callbackresponse['status'] = 200;
         $callbackresponsedata = json_encode($callbackresponse);
@@ -878,10 +881,10 @@ class broker {
         $tools = ['protect', 'publish', 'delete'];
         $recordings = recording::bigbluebutton_get_recordings_for_table_view($bbbsession, $enabledfeatures);
         $tabledata = array();
-        $typeprofiles = bigbluebuttonbn_get_instance_type_profiles();
-        $tabledata['activity'] = bigbluebuttonbn_view_get_activity_status($bbbsession);
-        $tabledata['ping_interval'] = (int) \mod_bigbluebuttonbn\local\config::get('waitformoderator_ping_interval') * 1000;
-        $tabledata['locale'] = bigbluebuttonbn_get_localcode();
+        $typeprofiles = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_get_instance_type_profiles();
+        $tabledata['activity'] = \mod_bigbluebuttonbn\local\bigbluebutton::bigbluebuttonbn_view_get_activity_status($bbbsession);
+        $tabledata['ping_interval'] = (int) config::get('waitformoderator_ping_interval') * 1000;
+        $tabledata['locale'] = \mod_bigbluebuttonbn\plugin::bigbluebuttonbn_get_localcode();
         $tabledata['profile_features'] = $typeprofiles[0]['features'];
         $tabledata['recordings_html'] = $bbbsession['bigbluebuttonbn']->recordings_html == '1';
 
@@ -890,7 +893,7 @@ class broker {
         if (isset($recordings) && !array_key_exists('messageKey', $recordings)) {
             // There are recordings for this meeting.
             foreach ($recordings as $recording) {
-                $rowdata = bigbluebuttonbn_get_recording_data_row($bbbsession, $recording, $tools);
+                $rowdata = recording::bigbluebuttonbn_get_recording_data_row($bbbsession, $recording, $tools);
                 if (!empty($rowdata)) {
                     array_push($data, $rowdata);
                 }

@@ -23,11 +23,12 @@
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  * @author    Darko Miletic  (darko.miletic [at] gmail [dt] com)
  */
-
+defined('MOODLE_INTERNAL') || die;
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/locallib.php');
 
 use mod_bigbluebuttonbn\local\broker;
+use mod_bigbluebuttonbn\local\view;
 
 global $PAGE, $USER, $CFG, $SESSION, $DB;
 
@@ -53,7 +54,7 @@ if (!empty($error)) {
     return;
 }
 
-$bbbbrokerinstance = bigbluebuttonbn_view_instance_bigbluebuttonbn($params['bigbluebuttonbn']);
+$bbbbrokerinstance = view::bigbluebuttonbn_view_instance_bigbluebuttonbn($params['bigbluebuttonbn']);
 $bigbluebuttonbn = $bbbbrokerinstance['bigbluebuttonbn'];
 $context = context_course::instance($bigbluebuttonbn->course);
 $PAGE->set_context($context);

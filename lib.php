@@ -26,11 +26,13 @@
 defined('MOODLE_INTERNAL') || die;
 
 use mod_bigbluebuttonbn\local\bbb_constants;
+use mod_bigbluebuttonbn\local\bigbluebutton;
 use mod_bigbluebuttonbn\local\helpers\files;
 use mod_bigbluebuttonbn\local\helpers\instance;
 use mod_bigbluebuttonbn\local\helpers\logs;
 use mod_bigbluebuttonbn\local\helpers\meeting;
 use mod_bigbluebuttonbn\local\helpers\reset;
+use mod_bigbluebuttonbn\plugin;
 
 global $CFG;
 
@@ -178,7 +180,7 @@ function bigbluebuttonbn_add_instance($bigbluebuttonbn) {
     // Insert a record.
     $bigbluebuttonbn->id = $DB->insert_record('bigbluebuttonbn', $bigbluebuttonbn);
     // Encode meetingid.
-    $bigbluebuttonbn->meetingid = bigbluebuttonbn_unique_meetingid_seed();
+    $bigbluebuttonbn->meetingid = plugin::bigbluebuttonbn_unique_meetingid_seed();
     // Set the meetingid column in the bigbluebuttonbn table.
     $DB->set_field('bigbluebuttonbn', 'meetingid', $bigbluebuttonbn->meetingid, array('id' => $bigbluebuttonbn->id));
     // Log insert action.
@@ -552,7 +554,7 @@ function mod_bigbluebuttonbn_core_calendar_provide_event_action(
     // Get if the user has joined in live session or viewed the recorded.
     $usercomplete = bigbluebuttonbn_user_complete($event->courseid, $event->userid, $bigbluebuttonbn);
     // Get if the room is available.
-    list($roomavailable) = bigbluebuttonbn_room_is_available($bigbluebuttonbn);
+    list($roomavailable) = bigbluebutton::bigbluebuttonbn_room_is_available($bigbluebuttonbn);
     // Get if the user can join.
     list($usercanjoin) = meeting::bigbluebuttonbn_user_can_join_meeting($bigbluebuttonbn);
     // Get if the time has already passed.

@@ -24,7 +24,9 @@
  * @author    Fred Dixon  (ffdixon [at] blindsidenetworks [dt] com)
  */
 
+use mod_bigbluebuttonbn\local\helpers\logs;
 use mod_bigbluebuttonbn\local\helpers\meeting;
+use mod_bigbluebuttonbn\local\helpers\roles;
 use mod_bigbluebuttonbn\output\index;
 use mod_bigbluebuttonbn\output\renderer;
 use mod_bigbluebuttonbn\plugin;
@@ -61,11 +63,11 @@ if ($action === 'end') {
     $course = $DB->get_record('course', array('id' => $bigbluebuttonbn->course), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('bigbluebuttonbn', $bigbluebuttonbn->id, $course->id, false, MUST_EXIST);
     // User roles.
-    $participantlist = bigbluebuttonbn_get_participant_list($bigbluebuttonbn, $PAGE->context);
-    $moderator = bigbluebuttonbn_is_moderator($PAGE->context, $participantlist);
+    $participantlist = roles::bigbluebuttonbn_get_participant_list($bigbluebuttonbn, $PAGE->context);
+    $moderator = roles::bigbluebuttonbn_is_moderator($PAGE->context, $participantlist);
     $administrator = is_siteadmin();
     if ($moderator || $administrator) {
-        bigbluebuttonbn_event_log(\mod_bigbluebuttonbn\event\events::$events['meeting_end'], $bigbluebuttonbn);
+        logs::bigbluebuttonbn_event_log(\mod_bigbluebuttonbn\event\events::$events['meeting_end'], $bigbluebuttonbn);
         echo get_string('index_ending', plugin::COMPONENT);
         $meetingid = sprintf('%s-%d-%d', $bigbluebuttonbn->meetingid, $course->id, $bigbluebuttonbn->id);
         if ($g != 0) {

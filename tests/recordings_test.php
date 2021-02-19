@@ -24,6 +24,7 @@
  */
 
 use mod_bigbluebuttonbn\local\bbb_constants;
+use mod_bigbluebuttonbn\local\helpers\recording;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
@@ -106,13 +107,13 @@ class mod_bigbluebuttonbn_recordings_testcase extends advanced_testcase {
     public function test_bigbluebuttonbn_get_allrecordings() {
         $this->resetAfterTest();
 
-        $recordings = bigbluebuttonbn_get_allrecordings($this->bbactivities[0]->course, $this->bbactivities[0]->id);
+        $recordings = recording::bigbluebuttonbn_get_allrecordings($this->bbactivities[0]->course, $this->bbactivities[0]->id);
         $this->assertCount(2, $recordings);
 
-        $recordings = bigbluebuttonbn_get_allrecordings($this->bbactivities[1]->course, $this->bbactivities[1]->id);
+        $recordings = recording::bigbluebuttonbn_get_allrecordings($this->bbactivities[1]->course, $this->bbactivities[1]->id);
         $this->assertCount(3, $recordings);
 
-        $recordings = bigbluebuttonbn_get_allrecordings($this->bbactivities[2]->course, $this->bbactivities[2]->id);
+        $recordings = recording::bigbluebuttonbn_get_allrecordings($this->bbactivities[2]->course, $this->bbactivities[2]->id);
         $this->assertCount(3, $recordings);
 
     }

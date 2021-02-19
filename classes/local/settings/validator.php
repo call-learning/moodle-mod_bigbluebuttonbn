@@ -23,7 +23,9 @@
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  */
 
-namespace mod_bigbluebuttonbn\settings;
+namespace mod_bigbluebuttonbn\local\settings;
+
+use mod_bigbluebuttonbn\local\bigbluebutton;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -180,7 +182,7 @@ class validator {
             !$CFG->bigbluebuttonbn['clienttype_enabled']) {
             return false;
         }
-        if (!bigbluebuttonbn_has_html5_client()) {
+        if (!bigbluebutton::bigbluebuttonbn_has_html5_client()) {
             return false;
         }
         return (!isset($CFG->bigbluebuttonbn['clienttype_default']) ||

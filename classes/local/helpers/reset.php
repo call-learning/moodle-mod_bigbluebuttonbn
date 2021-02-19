@@ -24,6 +24,7 @@
 namespace mod_bigbluebuttonbn\local\helpers;
 use context_module;
 use core_tag_tag;
+use mod_bigbluebuttonbn\local\config;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -58,9 +59,9 @@ class reset {
     public static function bigbluebuttonbn_reset_recordings($courseid) {
         require_once(__DIR__ . '/locallib.php');
         // Criteria for search [courseid | bigbluebuttonbn=null | subset=false | includedeleted=true].
-        $recordings = bigbluebuttonbn_get_recordings($courseid, null, false, true);
+        $recordings = recording::bigbluebuttonbn_get_recordings($courseid, null, false, true);
         // Remove all the recordings.
-        \mod_bigbluebuttonbn\local\helpers\recording::bigbluebuttonbn_delete_recordings(implode(",", array_keys($recordings)));
+        recording::bigbluebuttonbn_delete_recordings(implode(",", array_keys($recordings)));
     }
 
     /**
@@ -117,7 +118,7 @@ class reset {
     public static function bigbluebuttonbn_reset_course_items() {
         $items = array("events" => 0, "tags" => 0, "logs" => 0);
         // Include recordings only if enabled.
-        if ((boolean) \mod_bigbluebuttonbn\local\config::recordings_enabled()) {
+        if ((boolean) config::recordings_enabled()) {
             $items["recordings"] = 0;
         }
         return $items;

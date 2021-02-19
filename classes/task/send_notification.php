@@ -25,7 +25,7 @@
 namespace mod_bigbluebuttonbn\task;
 
 use core\task\adhoc_task;
-use \mod_bigbluebuttonbn\local\notifier;
+use mod_bigbluebuttonbn\local\notifier;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -58,6 +58,6 @@ class send_notification extends adhoc_task
         $data = $this->get_custom_data();
         mtrace("Execute send_notification task: Sending notification to user {$data->receiver->id}");
         // Process the completion.
-        \mod_bigbluebuttonbn\local\notifier::send_notification($data->sender, $data->receiver, $data->htmlmsg);
+        notifier::send_notification($data->sender, $data->receiver, $data->htmlmsg);
     }
 }
