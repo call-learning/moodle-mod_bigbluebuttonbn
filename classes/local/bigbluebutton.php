@@ -277,7 +277,6 @@ class bigbluebutton {
         if ($viewinstance) {
             $bbbsession = self::build_bbb_session_fromviewinstance($viewinstance);
             if ($bbbsession) {
-                require_once($CFG->dirroot . "/mod/bigbluebuttonbn/brokerlib.php");
                 $info = \mod_bigbluebuttonbn\local\helpers\meeting::bigbluebuttonbn_get_meeting_info($bbbsession['meetingid'], false);
                 $running = false;
                 if ($info['returncode'] == 'SUCCESS') {
@@ -287,7 +286,8 @@ class bigbluebutton {
                 if (isset($info['participantCount'])) {
                     $participantcount = $info['participantCount'];
                 }
-                $canjoin = bigbluebuttonbn_broker_meeting_info_can_join($bbbsession, $running, $participantcount);
+                $canjoin = \mod_bigbluebuttonbn\local\broker::meeting_info_can_join($bbbsession, $running,
+                    $participantcount);
             }
         }
         return $canjoin;

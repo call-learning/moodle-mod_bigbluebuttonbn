@@ -26,11 +26,11 @@
  */
 
 use mod_bigbluebuttonbn\local\bigbluebutton;
+use mod_bigbluebuttonbn\local\view;
 use mod_bigbluebuttonbn\plugin;
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/locallib.php');
-require_once(__DIR__.'/viewlib.php');
 
 $id = required_param('id', PARAM_INT);
 $bn = optional_param('bn', 0, PARAM_INT);
@@ -109,9 +109,9 @@ $activitystatus = bigbluebuttonbn_view_session_config($bbbsession, $id);
 // Output starts.
 echo $OUTPUT->header();
 
-bigbluebuttonbn_view_groups($bbbsession);
+view::view_groups($bbbsession);
 
-bigbluebuttonbn_view_render($bbbsession, $activitystatus);
+view::view_render($bbbsession, $activitystatus);
 
 // Output finishes.
 echo $OUTPUT->footer();
