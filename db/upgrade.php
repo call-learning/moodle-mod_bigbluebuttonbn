@@ -28,8 +28,6 @@ use mod_bigbluebuttonbn\plugin;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(dirname(dirname(__FILE__)).'/locallib.php');
-
 /**
  * Performs data migrations and updates on upgrade.
  *

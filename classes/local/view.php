@@ -33,7 +33,6 @@ use pix_icon;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
 
 /**
  * The view helpers
@@ -130,7 +129,7 @@ class view {
         $PAGE->requires->strings_for_js(array_keys(self::bigbluebuttonbn_get_strings_for_js()), 'bigbluebuttonbn');
         // JavaScript variables.
         $jsvars = array('activity' => $activity, 'ping_interval' => $pinginterval,
-            'locale' => self::bigbluebuttonbn_get_localcode(), 'profile_features' => $typeprofiles[0]['features']);
+            'locale' => plugin::bigbluebuttonbn_get_localcode(), 'profile_features' => $typeprofiles[0]['features']);
         $output = '';
         // Renders warning messages when configured.
         $output .= self::view_warning_default_server($bbbsession);
@@ -206,7 +205,7 @@ class view {
             return true;
         }
         $generalwarningroles = explode(',', config::get('general_warning_roles'));
-        $userroles = \mod_bigbluebuttonbn\local\bigbluebuttonbn_get_user_roles($bbbsession['context'], $bbbsession['userID']);
+        $userroles = \mod_bigbluebuttonbn\local\helpers\roles::bigbluebuttonbn_get_user_roles($bbbsession['context'], $bbbsession['userID']);
         foreach ($userroles as $userrole) {
             if (in_array($userrole->shortname, $generalwarningroles)) {
                 return true;

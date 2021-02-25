@@ -40,7 +40,7 @@ require_once($CFG->dirroot . '/mod/bigbluebuttonbn/lib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Laurent David (laurent@call-learning.fr)
  */
-class mod_bigbluebuttonbn_lib_testcase extends \bbb_simple_testcase {
+class mod_bigbluebuttonbn_lib_test extends \bbb_simple_test {
 
     public function test_bigbluebuttonbn_supports() {
         $this->resetAfterTest();

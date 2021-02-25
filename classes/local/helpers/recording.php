@@ -24,7 +24,6 @@
 
 namespace mod_bigbluebuttonbn\local\helpers;
 
-use associative;
 use html_table;
 use html_table_row;
 use html_writer;
@@ -65,7 +64,7 @@ class recording {
         }
         $recordings = self::bigbluebuttonbn_get_recordings_array_fetch($meetingidsarray);
         // Sort recordings.
-        uasort($recordings, "\\mod_bigbluebuttonbn\\local\\helpers\\self::bigbluebuttonbn_recording_build_sorter");
+        uasort($recordings, "\\mod_bigbluebuttonbn\\local\\helpers\\recording::bigbluebuttonbn_recording_build_sorter");
         // Filter recordings based on recordingIDs.
         $recordingidsarray = $recordingids;
         if (!is_array($recordingids)) {
@@ -93,7 +92,7 @@ class recording {
             // Just return the fake recording.
             global $CFG;
             require_once($CFG->libdir . '/testing/generator/lib.php');
-            require_once(__DIR__ . '/tests/generator/lib.php');
+            require_once($CFG->dirroot . '/mod/bigbluebuttonbn/tests/generator/lib.php');
             return mod_bigbluebuttonbn_generator::bigbluebuttonbn_get_recordings_array_fetch($meetingidsarray);
         }
         $recordings = array();

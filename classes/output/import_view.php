@@ -35,8 +35,6 @@ use templatable;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/mod/bigbluebuttonbn/locallib.php');
-
 /**
  * Class import_view
  * @package   mod_bigbluebuttonbn

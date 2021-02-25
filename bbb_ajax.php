@@ -31,7 +31,6 @@ use mod_bigbluebuttonbn\local\view;
 define('AJAX_SCRIPT', true);
 
 require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/locallib.php');
 
 global $PAGE, $USER, $CFG, $SESSION, $DB;
 

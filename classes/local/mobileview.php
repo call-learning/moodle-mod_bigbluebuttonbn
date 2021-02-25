@@ -28,7 +28,6 @@ use mod_bigbluebuttonbn\local\helpers\meeting;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
 
 /**
  * Methods used to render view BBB in mobile.

@@ -57,7 +57,6 @@ class reset {
      * @return array status array
      */
     public static function bigbluebuttonbn_reset_recordings($courseid) {
-        require_once(__DIR__ . '/locallib.php');
         // Criteria for search [courseid | bigbluebuttonbn=null | subset=false | includedeleted=true].
         $recordings = recording::bigbluebuttonbn_get_recordings($courseid, null, false, true);
         // Remove all the recordings.

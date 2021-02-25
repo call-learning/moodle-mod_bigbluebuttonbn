@@ -34,7 +34,6 @@ use mod_bigbluebuttonbn\local\view;
 use mod_bigbluebuttonbn\plugin;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/locallib.php');
 
 global $SESSION;
 

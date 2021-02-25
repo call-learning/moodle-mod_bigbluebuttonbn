@@ -37,8 +37,6 @@ use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/mod/bigbluebuttonbn/locallib.php');
-
 /**
  * Class index
  * @package   mod_bigbluebuttonbn

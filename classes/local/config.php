@@ -29,7 +29,6 @@ use mod_bigbluebuttonbn\local\bbb_constants;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
 
 /**
  * Handles the global configuration based on config.php.

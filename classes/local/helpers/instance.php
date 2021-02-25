@@ -63,7 +63,6 @@ class instance {
      **/
     public static function bigbluebuttonbn_process_pre_save_instance(&$bigbluebuttonbn) {
         global $CFG;
-        require_once( $CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
         $bigbluebuttonbn->timemodified = time();
         if ((integer) $bigbluebuttonbn->instance == 0) {
             $bigbluebuttonbn->meetingid = 0;

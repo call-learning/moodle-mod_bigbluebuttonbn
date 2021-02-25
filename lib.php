@@ -542,9 +542,6 @@ function mod_bigbluebuttonbn_core_calendar_provide_event_action(
     \core_calendar\action_factory $factory
 ) {
     global $CFG, $DB;
-
-    require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
-
     // Get mod info.
     $cm = get_fast_modinfo($event->courseid)->instances['bigbluebuttonbn'][$event->instance];
 

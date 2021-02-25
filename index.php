@@ -32,7 +32,6 @@ use mod_bigbluebuttonbn\output\renderer;
 use mod_bigbluebuttonbn\plugin;
 
 require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/locallib.php');
 
 $id = required_param('id', PARAM_INT);
 $a = optional_param('a', 0, PARAM_INT);

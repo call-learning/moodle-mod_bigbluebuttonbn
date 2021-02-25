@@ -34,7 +34,6 @@ use mod_bigbluebuttonbn\local\helpers\recording;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
 
 /**
  * The broker routines

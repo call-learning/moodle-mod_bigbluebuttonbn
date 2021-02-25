@@ -30,8 +30,6 @@ defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
 
-require_once(__DIR__.'/locallib.php');
-
 if ($hassiteconfig) {
     // Configuration for BigBlueButton.
     $renderer = new \mod_bigbluebuttonbn\local\settings\renderer($settings);

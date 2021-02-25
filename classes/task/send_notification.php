@@ -29,8 +29,6 @@ use mod_bigbluebuttonbn\local\notifier;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
-
 /**
  * Class containing the scheduled task for lti module.
  *

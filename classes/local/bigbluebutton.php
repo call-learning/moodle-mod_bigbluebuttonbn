@@ -38,7 +38,6 @@ use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
 
 /**
  * Wrapper for executing http requests on a BigBlueButton server.

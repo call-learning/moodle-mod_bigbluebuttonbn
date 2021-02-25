@@ -25,7 +25,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/locallib.php');
 
 use mod_bigbluebuttonbn\local\broker;
 use mod_bigbluebuttonbn\local\view;

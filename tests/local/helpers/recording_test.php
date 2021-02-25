@@ -22,15 +22,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  */
-
+namespace mod_bigbluebuttonbn\local\helpers;
+use advanced_testcase;
+use coding_exception;
 use mod_bigbluebuttonbn\local\bbb_constants;
-use mod_bigbluebuttonbn\local\helpers\recording;
+use mod_bigbluebuttonbn_generator;
 
 defined('MOODLE_INTERNAL') || die();
-global $CFG;
-
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
-
 /**
  * Privacy provider tests class.
  *
@@ -39,7 +37,7 @@ require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  */
-class mod_bigbluebuttonbn_recordings_testcase extends advanced_testcase {
+class recording_test extends advanced_testcase {
 
     /**
      * @var array of courses
@@ -58,6 +56,11 @@ class mod_bigbluebuttonbn_recordings_testcase extends advanced_testcase {
         'BBACTIVITY3' => ['courseindex' => 1, 'type' => bbb_constants::BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY, 'nbrecordings' => 3],
     ];
 
+    /**
+     * Setup
+     *
+     * @throws coding_exception
+     */
     public function setUp(): void {
         parent::setUp();
 
@@ -116,5 +119,17 @@ class mod_bigbluebuttonbn_recordings_testcase extends advanced_testcase {
         $recordings = recording::bigbluebuttonbn_get_allrecordings($this->bbactivities[2]->course, $this->bbactivities[2]->id);
         $this->assertCount(3, $recordings);
 
+    }
+
+    /**
+     * Test for provider::get_metadata().
+     */
+    public function test_bigbluebuttonbn_get_recording_type_text() {
+        $this->resetAfterTest(true);
+        $this->assertEquals('Presentation', recording::bigbluebuttonbn_get_recording_type_text('presentation'));
+        $this->assertEquals('Video', recording::bigbluebuttonbn_get_recording_type_text('video'));
+        $this->assertEquals('Videos', recording::bigbluebuttonbn_get_recording_type_text('videos'));
+        $this->assertEquals('Whatever', recording::bigbluebuttonbn_get_recording_type_text('whatever'));
+        $this->assertEquals('Whatever It Can Be', recording::bigbluebuttonbn_get_recording_type_text('whatever it can be'));
     }
 }

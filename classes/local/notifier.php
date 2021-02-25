@@ -30,7 +30,6 @@ use mod_bigbluebuttonbn\plugin;
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
 
 /**
  * Helper class for sending notifications.

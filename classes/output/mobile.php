@@ -34,8 +34,8 @@ use mod_bigbluebuttonbn\local\helpers\logs;
 use mod_bigbluebuttonbn\local\helpers\meeting;
 use mod_bigbluebuttonbn\local\mobileview;
 use mod_bigbluebuttonbn\local\view;
+use mod_bigbluebuttonbn\output\mod_bigbluebuttonbn\local\helpers\roles;
 
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
 require_once($CFG->dirroot . '/lib/grouplib.php');
 
 /**
@@ -169,7 +169,7 @@ class mobile {
             }
             if ($response['returncode'] == 'FAILED') {
                 // The meeting could not be created.
-                $errorkey = \mod_bigbluebuttonbn\output\mod_bigbluebuttonbn\local\helpers\roles::bigbluebuttonbn_get_participant_listget_error_key($response['messageKey'], 'view_error_create');
+                $errorkey = roles::bigbluebuttonbn_get_participant_listget_error_key($response['messageKey'], 'view_error_create');
                 $e = get_string($errorkey, 'bigbluebuttonbn');
                 return(self::mobile_print_error($e));
             }

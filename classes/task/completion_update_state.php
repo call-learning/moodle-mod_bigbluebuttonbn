@@ -28,8 +28,6 @@ use core\task\adhoc_task;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
-
 /**
  * Class containing the scheduled task for lti module.
  *

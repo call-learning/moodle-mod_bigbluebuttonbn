@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/mod/bigbluebuttonbn/tests/helpers.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Laurent David (laurent@call-learning.fr)
  */
-class instance_testcase extends \bbb_simple_testcase {
+class instance_test extends \bbb_simple_test {
 
     /**
      * Presave test
@@ -98,7 +98,6 @@ class instance_testcase extends \bbb_simple_testcase {
      */
     public function test_bigbluebuttonbn_process_pre_save_common() {
         global $CFG;
-        require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
         $this->resetAfterTest();
 
         list($bbactivitycontext, $bbactivitycm, $bbactivity) =
@@ -118,7 +117,6 @@ class instance_testcase extends \bbb_simple_testcase {
      */
     public function test_bigbluebuttonbn_process_post_save() {
         global $CFG;
-        require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
         $this->resetAfterTest();
 
         list($bbactivitycontext, $bbactivitycm, $bbactivity) =
@@ -148,7 +146,6 @@ class instance_testcase extends \bbb_simple_testcase {
      */
     public function test_bigbluebuttonbn_process_post_save_notification() {
         global $CFG;
-        require_once($CFG->dirroot . '/mod/bigbluebuttonbn/locallib.php');
         $this->resetAfterTest();
 
         list($bbactivitycontext, $bbactivitycm, $bbactivity) =
