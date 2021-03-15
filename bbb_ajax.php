@@ -127,12 +127,7 @@ try {
         echo broker::recording_import($bbbsession, $params);
         return;
     }
-    if ($a == 'recording_list_table') {
-        $PAGE->set_context(context_course::instance($PAGE->course->id));
-        $recordingdata = broker::get_recording_data($bbbsession, $params, $enabledfeatures);
-        echo $recordingdata;
-        return;
-    }
+    // Removed : recording_list_table.
     if ($a == 'completion_validate') {
         $completionvalidate = broker::completion_validate($bigbluebuttonbn, $params);
         echo $completionvalidate;

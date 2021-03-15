@@ -280,7 +280,7 @@ class bigbluebutton {
         global $CFG;
         $canjoin = array('can_join' => false, 'message' => '');
 
-        $viewinstance = view::bigbluebuttonbn_view_validator($cmid, null);
+        $viewinstance = view::bigbluebuttonbn_view_instance_id($cmid);
         if ($viewinstance) {
             $bbbsession = self::build_bbb_session_fromviewinstance($viewinstance);
             if ($bbbsession) {

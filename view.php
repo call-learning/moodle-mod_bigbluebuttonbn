@@ -84,9 +84,8 @@ $PAGE->set_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
 $PAGE->set_title($bigbluebuttonbn->name);
 $PAGE->set_cacheable(false);
 $PAGE->set_heading($course->fullname);
-
+$PAGE->requires->css('/mod/bigbluebuttonbn/css/jquery.dataTables.css');
 /** @var core_renderer $OUTPUT */
-$OUTPUT;
 
 // Validate if the user is in a role allowed to join.
 if (!has_any_capability(['moodle/category:manage', 'mod/bigbluebuttonbn:join'], $PAGE->context)) {

@@ -12,28 +12,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+import $ from 'jquery';
+import config from 'core/config';
 
-/** global: M */
-/** global: Y */
-
-M.mod_bigbluebuttonbn = M.mod_bigbluebuttonbn || {};
-
-M.mod_bigbluebuttonbn.imports = {
-
-    /**
-     * Initialise the broker code.
-     *
-     * @method init
-     * @param {object} data
-     */
-    init: function(data) {
-        // Init event listener for course selector.
-        Y.one('#menuimport_recording_links_select').on('change', function() {
-            var endpoint = '/mod/bigbluebuttonbn/import_view.php';
-            var qs = '?bn=' + data.bn + '&tc=' + this.get('value');
-            Y.config.win.location = M.cfg.wwwroot + endpoint + qs;
-        });
-    }
-
+export const init = (data) => {
+    $('#menuimport_recording_links_select').change(
+        function () {
+            const endpoint = '/mod/bigbluebuttonbn/import_view.php';
+            const qs = '?bn=' + data.bn + '&tc=' + $(this).val();
+            window.location = config.wwwroot + endpoint + qs;
+        }
+    );
 };
-

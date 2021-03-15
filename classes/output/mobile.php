@@ -62,7 +62,7 @@ class mobile {
         global $OUTPUT, $SESSION;
 
         $args = (object) $args;
-        $viewinstance = view::bigbluebuttonbn_view_validator($args->cmid, null);
+        $viewinstance = view::bigbluebuttonbn_view_instance_id($args->cmid);
         if (!$viewinstance) {
             $error = get_string('view_error_url_missing_parameters', 'bigbluebuttonbn');
             return(self::mobile_print_error($error));

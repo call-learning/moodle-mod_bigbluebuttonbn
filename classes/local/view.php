@@ -150,11 +150,13 @@ class view {
         // Show recordings should only be enabled if recordings are also enabled in session.
         if ($enabledfeatures['showrecordings'] && $bbbsession['record']) {
             $output .= html_writer::start_tag('div', array('id' => 'bigbluebuttonbn_view_recordings'));
+            // TODO: Modify this method here. We should not modify jsvar or bbsession in here !!
             $output .= self::view_render_recording_section($bbbsession, $type,
                 $enabledfeatures, $jsvars);
             $output .= html_writer::end_tag('div');
-            $PAGE->requires->yui_module('moodle-mod_bigbluebuttonbn-recordings',
-                'M.mod_bigbluebuttonbn.recordings.init', array($jsvars));
+            $PAGE->requires->js_call_amd('mod_bigbluebuttonbn/recordings', 'init', array($jsvars));
+            //$PAGE->requires->yui_module('moodle-mod_bigbluebuttonbn-recordings',
+//                'M.mod_bigbluebuttonbn.recordings.init', array($jsvars));
         } else if ($type == bbb_constants::BIGBLUEBUTTONBN_TYPE_RECORDING_ONLY) {
             $recordingsdisabled = get_string('view_message_recordings_disabled', 'bigbluebuttonbn');
             $output .= self::bigbluebuttonbn_render_warning($recordingsdisabled, 'danger');

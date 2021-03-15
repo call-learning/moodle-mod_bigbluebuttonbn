@@ -1,3 +1,10 @@
 <?xml version="1.0"?>
 <libraries>
+    <library>
+        <location>amd/src/local/libraries/jquery.dataTables.js</location>
+        <name>TinyMCE</name>
+        <license>LGPL</license>
+        <version>3.5.11</version>
+        <licenseversion>2.1+</licenseversion>
+    </library>
 </libraries>

@@ -102,12 +102,15 @@ class import_view implements renderable, templatable {
             // JavaScript for locales.
             $PAGE->requires->strings_for_js(array_keys(view::bigbluebuttonbn_get_strings_for_js()), 'bigbluebuttonbn');
             // Require JavaScript modules.
-            $PAGE->requires->yui_module('moodle-mod_bigbluebuttonbn-imports', 'M.mod_bigbluebuttonbn.imports.init',
-                array(array('bn' => $bigbluebuttonbn->id, 'tc' => $selected)));
+            //$PAGE->requires->yui_module('moodle-mod_bigbluebuttonbn-imports', 'M.mod_bigbluebuttonbn.imports.init',
+            //                array(array('bn' => $bigbluebuttonbn->id, 'tc' => $selected)));
+            $PAGE->requires->js_call_amd('mod_bigbluebuttonbn/imports', 'init',
+                     array(array('bn' => $bigbluebuttonbn->id, 'tc' => $selected)));
             $PAGE->requires->yui_module('moodle-mod_bigbluebuttonbn-broker', 'M.mod_bigbluebuttonbn.broker.init',
                 array());
-            $PAGE->requires->yui_module('moodle-mod_bigbluebuttonbn-recordings', 'M.mod_bigbluebuttonbn.recordings.init',
-                array('recordings_html' => true));
+            $PAGE->requires->js_call_amd('mod_bigbluebuttonbn/recordings', 'init', array('recordings_html' => true));
+            //$PAGE->requires->yui_module('moodle-mod_bigbluebuttonbn-recordings', 'M.mod_bigbluebuttonbn.recordings.init',
+            //    array('recordings_html' => true));
         }
     }
 
